@@ -4,6 +4,7 @@ class View {
     this.inputValue = document.querySelector("input");
     this.todoList = document.querySelector(".todo-list");
     this.filterElement = document.getElementsByClassName("filter")[0];
+    this.defaultFilter = document.querySelector('.default');
   }
 
   bindAddBtn = (handleBindAddBtn) => {
@@ -18,16 +19,17 @@ class View {
   };
 
   renderPage = (taskList) => {
+
     this.todoList.innerHTML = "";
 
-    taskList.forEach((task) => {
-      const { text, id, done, edit } = task;
-      this.addTask(id, text, done, edit);
-    });
+    this.addTask(taskList);
   };
 
-  addTask = (id, text, done, edit) => {
+  addTask = (taskList) => {
+    taskList.forEach(element => {
+      const {id,edit,done,text} = element;
       let li = document.createElement("li");
+
       li.classList.add("li-item");
       li.textContent = text;
       li.id = `${id}`;
@@ -45,8 +47,8 @@ class View {
       this.bindCreateBtn("edit-btn", "Edit", li);
       this.bindCreateBtn("complete-btn", "Complete", li);
       this.todoList.appendChild(li);
-      
-  };
+    });
+  }
 
   bindCreateBtn = (classButton, btnText, li) => {
     let createButton = document.createElement("button");
@@ -88,14 +90,30 @@ class View {
       }
     });
   };
+
   bindFilterTask = (handleFilterTasks) => {
+    debugger
     this.filterElement.addEventListener("change", event => {
       event.preventDefault();
       let filterELChild = this.filterElement.value.toLowerCase();
+      switch(filterELChild) {
+        case 'all': {
+          this.defaultFilter.textContent = 'All';
+          break
+        }
+        case 'completed': {
+          this.defaultFilter.textContent = 'Completed';
+          break
+        }
+        case 'active': {
+          this.defaultFilter.textContent = 'Active';
+          break
+        }
+
+      }
       handleFilterTasks(filterELChild);  
       })
   };
 }
-
 
 export default View;
